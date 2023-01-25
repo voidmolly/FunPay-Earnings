@@ -1,0 +1,125 @@
+import logging
+from aiogram import Bot, Dispatcher, executor, types
+from aiogram.dispatcher.filters import Text
+# from aiogram.dispatcher import FSMContext
+# from aiogram.dispatcher.filters.state import State, StatesGroup
+from calc import UserData
+from config import TOKEN
+
+
+logging.basicConfig(level=logging.INFO)
+
+bot = Bot(token=TOKEN,
+          parse_mode="MarkdownV2")
+
+dp = Dispatcher(bot)
+
+
+userdata = UserData()
+
+
+@dp.message_handler(commands="start")
+async def cmdStart(message: types.Message):
+    await message.answer("*Добро пожаловать в бота для учета финансов FunPay\!*\n\nМеня разрабатывает начинающий программист *@solarmolly*\nИсходный код бота открыт для всех, Автор никого никак не ограничивает в использовании продукта\! \nЕсли вы разработчик, и вам понравилась моя идея \- буду рад, если вы поможете мне развивать продукт или на основе моих наработок начнете разрабатывать своего бота\! \n\nДля получения инструкции по использованию \- */help*")
+
+
+@dp.message_handler(commands="help")
+async def cmdHelp(message: types.Message):
+    await message.answer("Итак, пока что разработчик\-масленок не добрался до FSM, поэтому использование бота тебе может показаться странным\. Но я попытаюсь объяснить максимально понятным языком \- как же всё\-таки использовать этого бота")
+    await message.answer("Любая твоя команда будет начинаться с префикса \- он позволит боту понять, что ты хочешь сделать\n\n" +
+                         "После префикса пойдут принимаемые ботом значения \- я их написал ниже вместе с префиксами\n\n"
+                         "Следующие строки понимай так: _[команда]_ [префикс] [принимаемые значения]\n" +
+                         "Итак, вот доступные тебе команды:\n" +
+                         "_Покупка_ `-по количество цена` _\(за 1 единицу\)_\n" +
+                         "_Продажа_ `-пр количество цена` _\(за 1 единицу\)_\n" +
+                         "_Возврат_ `-во количество цена`\n" +
+                         "_Вывод \(вывод средств с FunPay с учетом комиссии\)_ `-вы`\n" +
+                         "_Профит \(рассчет общего дохода с учетом затрат\)_ `-п`")
+    await message.answer("Пример использования команды Покупка:\n\n`-по 13 16\.2`\n\nТо есть я *закупил* *13* товаров по *16\.2* рублей\n\n" +
+                         "`-п`\n\nА здесь я попросил бота *рассчитать мне прибыль*")
+
+
+# Ищем сообщение, начинающееся с "-", чтобы опознать команду
+@dp.message_handler(Text(startswith="-"))
+async def doSmth(message: types.Message):
+    input = message.text.split()
+    prefix = input[0]
+    # Теперь узнаем что за команду пользователь загадал
+    if prefix == "-по":
+        count = int(input[1])
+        price = float(input[2])
+        # Вызываем функцию из объекта userdata класса UserData, чтобы произвести рассчеты
+        userdata.buy(count, price)
+        await message.reply(f"Покупка `{count}` шт\. товара по `{price}` рублей на сумму `{float(count) * price}` рублей\n" +
+                            f"Всего затрат на: `{userdata.spent}` рублей")
+    elif prefix == "-пр":
+        count = int(input[1])
+        price = float(input[2])
+        userdata.sell(count, price)
+        await message.reply(f"Продажа `{count}` шт\. товара по `{price}` рублей на сумму `{float(count) * price}` рублей\n" +
+                            f"Всего продаж: `{userdata.sold}`\nНовый баланс: `{userdata.balance}` рублей")
+    elif prefix == "-во":
+        count = float(input[1])
+        refund_sum = float(input[2])
+        userdata.refund(refund_sum)
+        await message.reply(f"Возврат товаров на сумму `{refund_sum * float(count)}` рублей\n" +
+                            f"Всего возвратов: `{userdata.refunds}`\n" +
+                            f"Всего продаж: `{userdata.sold}`\nНовый баланс: `{userdata.balance}` рублей")
+    elif prefix == "-вы":
+        old_balance = userdata.balance
+        userdata.withdraw()
+        await message.reply(f"Вывод средств на сумму `{old_balance}` рублей _\(за вычетом комиссии\)_\nВсего выведено: `{userdata.earned}` рублей\n" +
+                            f"Баланс обнулен")
+    elif prefix == "-п":
+        await message.reply(f"Потрачено: `{userdata.spent}`, Выведено: `{userdata.earned}`\nОбщая прибыль составляет `{userdata.profit}`")
+    else:
+        await message.reply("Проверьте правильность введенных данных")
+
+
+
+# КНОПКИ
+# user_states = {
+#     "user_id"
+# }
+#
+#
+# def get_keyboard():
+#     # Генерация клавиатуры.
+#     buttons = [
+#         types.InlineKeyboardButton(text="Покупка",
+#                                    callback_data="buy"),
+#         types.InlineKeyboardButton(text="Продажа",
+#                                    callback_data="sell"),
+#         types.InlineKeyboardButton(text="Возврат",
+#                                    callback_data="refund"),
+#         types.InlineKeyboardButton(text="Вывод средств",
+#                                    callback_data="withdraw"),
+#         types.InlineKeyboardButton(text="Рассчитать прибыль",
+#                                    callback_data="profit")
+#     ]
+#     # Благодаря row_width=2, в первом ряду будет две кнопки, а оставшаяся одна
+#     # уйдёт на следующую строку
+#     keyboard = types.InlineKeyboardMarkup(row_width=2)
+#     keyboard.add(*buttons)
+#     return keyboard
+#
+#
+# @dp.message_handler(commands="start")
+# async def cmd_start(message: types.Message):
+#     await message.answer("Это главное меню Бота!\nТут можно кнопки нажимать",
+#                          reply_markup=get_keyboard())
+#
+#
+# async def update_text(message: types.Message, new_str: str, new_num: float)
+#     await message.edit_text(f"{new_str}: {new_num}", reply_markup=get_keyboard())
+#
+#
+# @dp.callback_query_handler(lambda call: call.data == "buy")
+# async def callback_buy(call: types.CallbackQuery):
+
+
+
+
+if __name__ == "__main__":
+    # Запуск бота
+    executor.start_polling(dp, skip_updates=True)
