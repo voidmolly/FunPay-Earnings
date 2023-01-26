@@ -1,4 +1,4 @@
-# Release 1.0.2
+# Release v1.0.3
 import logging
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher.filters import Text
