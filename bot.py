@@ -51,28 +51,28 @@ async def doSmth(message: types.Message):
         price = float(input[2])
         # Вызываем функцию из объекта userdata класса UserData, чтобы произвести рассчеты
         userdata.buy(count, price)
-        await message.reply(f"Покупка `{count}` шт\. товара по `{price}` рублей на сумму `{float(count) * price}` рублей\n" +
-                            f"Всего затрат на: `{userdata.spent}` рублей")
+        await message.reply(f"Покупка `{count}` шт\. товара по `{price}` рублей на сумму `{round(float(count) * price, 2)}` рублей\n" +
+                            f"Всего затрат на: `{round(userdata.spent, 2)}` рублей")
     elif prefix == "-пр":
         count = int(input[1])
         price = float(input[2])
         userdata.sell(count, price)
-        await message.reply(f"Продажа `{count}` шт\. товара по `{price}` рублей на сумму `{float(count) * price}` рублей\n" +
-                            f"Всего продаж: `{userdata.sold}`\nНовый баланс: `{userdata.balance}` рублей")
+        await message.reply(f"Продажа `{count}` шт\. товара по `{price}` рублей на сумму `{round(float(count) * price, 2)}` рублей\n" +
+                            f"Всего продаж: `{userdata.sold}`\nНовый баланс: `{round(userdata.balance, 2)}` рублей")
     elif prefix == "-во":
         count = float(input[1])
         refund_sum = float(input[2])
         userdata.refund(refund_sum)
-        await message.reply(f"Возврат товаров на сумму `{refund_sum * float(count)}` рублей\n" +
+        await message.reply(f"Возврат товаров на сумму `{round(refund_sum * float(count), 2)}` рублей\n" +
                             f"Всего возвратов: `{userdata.refunds}`\n" +
-                            f"Всего продаж: `{userdata.sold}`\nНовый баланс: `{userdata.balance}` рублей")
+                            f"Всего продаж: `{userdata.sold}`\nНовый баланс: `{round(userdata.balance, 2)}` рублей")
     elif prefix == "-вы":
         old_balance = userdata.balance
         userdata.withdraw()
-        await message.reply(f"Вывод средств на сумму `{old_balance}` рублей _\(за вычетом комиссии\)_\nВсего выведено: `{userdata.earned}` рублей\n" +
+        await message.reply(f"Вывод средств на сумму `{round(old_balance, 2)}` рублей _\(за вычетом комиссии\)_\nВсего выведено: `{round(userdata.earned, 2)}` рублей\n" +
                             f"Баланс обнулен")
     elif prefix == "-п":
-        await message.reply(f"Потрачено: `{userdata.spent}`, Выведено: `{userdata.earned}`\nОбщая прибыль составляет `{userdata.earned - userdata.spent}`")
+        await message.reply(f"Потрачено: `{round(userdata.spent, 2)}`, Выведено: `{round(userdata.earned, 2)}`\nОбщая прибыль составляет `{round(userdata.earned - userdata.spent, 2)}`")
     else:
         await message.reply("Проверьте правильность введенных данных")
 
