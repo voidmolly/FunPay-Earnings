@@ -72,7 +72,7 @@ async def doSmth(message: types.Message):
         await message.reply(f"Вывод средств на сумму `{old_balance}` рублей _\(за вычетом комиссии\)_\nВсего выведено: `{userdata.earned}` рублей\n" +
                             f"Баланс обнулен")
     elif prefix == "-п":
-        await message.reply(f"Потрачено: `{userdata.spent}`, Выведено: `{userdata.earned}`\nОбщая прибыль составляет `{userdata.profit}`")
+        await message.reply(f"Потрачено: `{userdata.spent}`, Выведено: `{userdata.earned}`\nОбщая прибыль составляет `{userdata.earned - userdata.spent}`")
     else:
         await message.reply("Проверьте правильность введенных данных")
 
