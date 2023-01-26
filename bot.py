@@ -1,3 +1,4 @@
+# Release 1.0.1
 import logging
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher.filters import Text
@@ -74,50 +75,6 @@ async def doSmth(message: types.Message):
         await message.reply(f"Потрачено: `{userdata.spent}`, Выведено: `{userdata.earned}`\nОбщая прибыль составляет `{userdata.profit}`")
     else:
         await message.reply("Проверьте правильность введенных данных")
-
-
-
-# КНОПКИ
-# user_states = {
-#     "user_id"
-# }
-#
-#
-# def get_keyboard():
-#     # Генерация клавиатуры.
-#     buttons = [
-#         types.InlineKeyboardButton(text="Покупка",
-#                                    callback_data="buy"),
-#         types.InlineKeyboardButton(text="Продажа",
-#                                    callback_data="sell"),
-#         types.InlineKeyboardButton(text="Возврат",
-#                                    callback_data="refund"),
-#         types.InlineKeyboardButton(text="Вывод средств",
-#                                    callback_data="withdraw"),
-#         types.InlineKeyboardButton(text="Рассчитать прибыль",
-#                                    callback_data="profit")
-#     ]
-#     # Благодаря row_width=2, в первом ряду будет две кнопки, а оставшаяся одна
-#     # уйдёт на следующую строку
-#     keyboard = types.InlineKeyboardMarkup(row_width=2)
-#     keyboard.add(*buttons)
-#     return keyboard
-#
-#
-# @dp.message_handler(commands="start")
-# async def cmd_start(message: types.Message):
-#     await message.answer("Это главное меню Бота!\nТут можно кнопки нажимать",
-#                          reply_markup=get_keyboard())
-#
-#
-# async def update_text(message: types.Message, new_str: str, new_num: float)
-#     await message.edit_text(f"{new_str}: {new_num}", reply_markup=get_keyboard())
-#
-#
-# @dp.callback_query_handler(lambda call: call.data == "buy")
-# async def callback_buy(call: types.CallbackQuery):
-
-
 
 
 if __name__ == "__main__":
