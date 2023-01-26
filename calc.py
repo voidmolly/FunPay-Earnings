@@ -27,7 +27,7 @@ class UserData:
         :param price: цена за 1 единицу товара.
         :return: текущий баланс, текущее кол-во проданного товара.
         """
-        self.balance += price * count
+        self.balance += round(price * count, 2)
         self.sold += count
         self.save()
 
@@ -38,7 +38,7 @@ class UserData:
         :param price: цена за 1 единицу товара.
         :return: текущая потраченная сумма.
         """
-        self.spent += price * count
+        self.spent += round(price * count, 2)
         self.save()
 
     def refund(self, price: float) -> None:
@@ -64,13 +64,6 @@ class UserData:
             withdraw_sum = self.balance * 0.97
             self.earned += round(withdraw_sum, 2)
         self.balance = 0
-        self.save()
-
-    def profit_count(self) -> None:
-        """
-        Изменяет текущий профит.
-        """
-        profit = round((self.earned - self.spent), 2)
         self.save()
 
     def save(self) -> None:
