@@ -1,1 +1,1 @@
-cmd.exe /k "python bot.py"
+cmd.exe /k "python src/main.py"
