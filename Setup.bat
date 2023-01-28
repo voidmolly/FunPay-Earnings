@@ -1,1 +1,1 @@
-cmd.exe /k "python setup.py"
+cmd.exe /k "python src/setup.py"

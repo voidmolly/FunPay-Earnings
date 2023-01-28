@@ -3,5 +3,4 @@
 /build
 /dist
 /.idea
-save.json
-config.py
+src/save.json
