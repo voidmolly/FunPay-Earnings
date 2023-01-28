@@ -4,4 +4,4 @@
 /dist
 /.idea
 /src/save.json
-src/config.py
+/src/config.py
