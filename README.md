@@ -7,4 +7,4 @@
 
 Инструкция - https://zelenka.guru/threads/4888388/
 
-Автор - t.me/solarmolly
+Автор - https://.me/solarmolly
