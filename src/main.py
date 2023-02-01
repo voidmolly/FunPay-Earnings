@@ -2,10 +2,11 @@
 import logging
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher.filters import Text
-# from aiogram.dispatcher import FSMContext
 # from aiogram.dispatcher.filters.state import State, StatesGroup
 from calc import UserData
 from config import TOKEN
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from fsm import UserState
 
 
 logging.basicConfig(level=logging.INFO)
@@ -13,10 +14,12 @@ logging.basicConfig(level=logging.INFO)
 bot = Bot(token=TOKEN,
           parse_mode="MarkdownV2")
 
-dp = Dispatcher(bot)
+storage = MemoryStorage()
+dp = Dispatcher(bot, storage=storage)
 
 
 userdata = UserData()
+userstate = UserState()
 
 
 @dp.message_handler(commands="start")
